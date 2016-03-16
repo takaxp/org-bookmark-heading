@@ -20,6 +20,10 @@ Add to your init file:
 
 Use the standard Emacs bookmark commands, =C-x r m=, etc.
 
+If you use Helm, you can jump to org-mode bookmarks in an indirect buffer by pressing =<C-return>= in the Helm buffer, or by choosing the action from the list.
+
+You can also customize the variable =org-bookmark-jump-indirect= to make org-mode bookmarks always open in indirect buffers.
+
 ** License
 
 GPLv3

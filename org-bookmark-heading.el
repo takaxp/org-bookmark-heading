@@ -2,6 +2,18 @@
 
 ;; Author: Adam Porter <adam@alphapapa.net>
 
+;;; Commentary:
+
+;; This package provides Emacs bookmark support for org-mode.  You can
+;; bookmark headings in org-mode files and jump to them using standard
+;; Emacs bookmark commands.
+
+;; It seems like this file should be named org-bookmark.el, but a
+;; package by that name already exists which lets org-mode links point
+;; to Emacs bookmarks, sort-of the reverse of this package.
+
+;; It also seems like this should be built-in to org-mode...  ;)
+
 ;;; Installation:
 
 ;; Add to your init file:
@@ -12,15 +24,12 @@
 
 ;; Use the standard Emacs bookmark commands, "C-x r m", etc.
 
-;;; Commentary:
+;; If you use Helm, you can jump to org-mode bookmarks in an indirect
+;; buffer by pressing "<C-return>" in the Helm buffer, or by choosing
+;; the action from the list.
 
-;; This package provides Emacs bookmark support for org-mode.  You can
-;; bookmark headings in org-mode files and jump to them using standard
-;; Emacs bookmark commands.
-
-;; It seems like this file should be named org-bookmark.el, but a
-;; package by that name already exists which lets org-mode links point
-;; to Emacs bookmarks, sort-of the reverse of this package.
+;; You can also customize the variable `org-bookmark-jump-indirect' to
+;; make org-mode bookmarks always open in indirect buffers.
 
 ;;; License:
 
@@ -40,6 +49,10 @@
 ;;; Code:
 
 (require 'org)
+
+(defcustom org-bookmark-jump-indirect nil
+  "Jump to `org-mode' bookmarks in indirect buffers with `org-tree-to-indirect-buffer'."
+  :group 'org :type 'boolean)
 
 (defun org-set-bookmark-make-record-function ()
   "Set `bookmark-make-record-function' to
@@ -87,8 +100,8 @@ heading.  Set org-id for heading if necessary."
 `front-context-string' is an org-id."
   (let ((filename (cdr (assoc 'filename bookmark)))
         (id (cdr (assoc 'front-context-string bookmark)))
-        marker
-        new-buffer)
+        (original-buffer (current-buffer))
+        marker new-buffer)
     (or
      ;; Look in open and agenda files first. This way, if the node has
      ;; moved to another file, this might find it.
@@ -103,9 +116,19 @@ heading.  Set org-id for heading if necessary."
        (setq marker (org-id-find id t))))
 
     (if marker
-        ;; Bookmark found
         (progn
+          ;; Bookmark found
           (org-goto-marker-or-bmk marker)
+
+          (when org-bookmark-jump-indirect
+            (org-tree-to-indirect-buffer)
+            (when (not (equal original-buffer (car (window-prev-buffers))))
+              ;; The selected bookmark was in a different buffer.  Put the
+              ;; non-indirect buffer at the bottom of the prev-buffers list
+              ;; so it won't be selected when the indirect buffer is killed.
+              (set-window-prev-buffers nil (append (cdr (window-prev-buffers))
+                                                   (car (window-prev-buffers))))))
+
           (when (not (equal (buffer-file-name (marker-buffer marker)) filename))
             ;; TODO: Automatically update the bookmark?
 
@@ -121,6 +144,36 @@ heading.  Set org-id for heading if necessary."
 
           ;; File not found
           (message "Bookmark for org-id %s not found in open org files or agenda files, and file not found: %s" id filename))))))
+
+;;;; Helm support
+
+(when (require 'helm nil t)
+
+  (defun helm-org-bookmark-jump-indirect-action (bookmark)
+    "Call `bookmark-jump' with `org-bookmark-jump-indirect' set to t.
+
+This function is necessary because `helm-exit-and-execute-action'
+somehow loses the dynamic binding of `org-bookmark-jump-indirect'.
+This calls `bookmark-jump' with it set properly.  Maybe there's a
+better way to do this, but Helm can be confusing, and this works."
+    (let ((org-bookmark-jump-indirect t))
+      (bookmark-jump bookmark)))
+
+  (defun helm-org-bookmark-jump-indirect ()
+    "Jump to `org-mode' BOOKMARK in an indirect buffer."
+    (interactive)
+    (with-helm-alive-p
+      (let ((bookmark (helm-get-selection)))
+        (if (equal (bookmark-get-handler bookmark) 'org-bookmark-jump)
+            ;; Selected candidate is an org-mode bookmark
+            (helm-exit-and-execute-action 'helm-org-bookmark-jump-indirect-action)
+          (error "Not an org-mode bookmark")))))
+
+  (when (not (lookup-key helm-bookmark-map (kbd "<C-return>")))
+    (define-key helm-bookmark-map (kbd "<C-return>") 'helm-org-bookmark-jump-indirect))
+  (add-to-list 'helm-type-bookmark-actions
+               '("Jump to org-mode bookmark in indirect buffer" . helm-org-bookmark-jump-indirect-action)
+               t))
 
 (provide 'org-bookmark-heading)
 
