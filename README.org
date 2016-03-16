@@ -1,0 +1,25 @@
+* org-bookmark-heading.el
+
+** About
+
+This package provides Emacs bookmark support for org-mode.  You can bookmark headings in org-mode files and jump to them using standard Emacs bookmark commands.
+
+It seems like this file should be named =org-bookmark.el=, but a [[https://lists.gnu.org/archive/html/emacs-orgmode/2008-02/msg00328.html][package]] by that name already exists which lets org-mode links point to Emacs bookmarks, sort-of the reverse of this package.
+
+It also seems like this should be built-in to org-mode...  ;)
+
+** Installation
+
+Add to your init file:         
+
+#+BEGIN_SRC elisp
+(require 'org-bookmark-heading)
+#+END_SRC
+
+** Usage
+
+Use the standard Emacs bookmark commands, =C-x r m=, etc.
+
+** License
+
+GPLv3
