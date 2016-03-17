@@ -1,6 +1,8 @@
 ;;; org-bookmark-heading.el --- Emacs bookmark support for org-mode
 
 ;; Author: Adam Porter <adam@alphapapa.net>
+;; Url: http://github.com/alphapapa/org-bookmark-heading
+;; Package-Version: 1.0.0
 
 ;;; Commentary:
 
@@ -14,13 +16,16 @@
 
 ;; It also seems like this should be built-in to org-mode...  ;)
 
-;;; Installation:
+;;; Installation
 
-;; Add to your init file:
-;;
+;; If you install from MELPA, you don't need to do anything else, but
+;; you can customize `org-bookmark-jump-indirect' if you want.
+
+;; If you install manually, add this to your init file:
+
 ;; (require 'org-bookmark-heading)
 
-;;; Usage:
+;;; Usage
 
 ;; Use the standard Emacs bookmark commands, "C-x r m", etc.
 
@@ -50,16 +55,19 @@
 
 (require 'org)
 
+;;;###autoload
 (defcustom org-bookmark-jump-indirect nil
   "Jump to `org-mode' bookmarks in indirect buffers with `org-tree-to-indirect-buffer'."
   :group 'org :type 'boolean)
 
+;;;###autoload
 (defun org-set-bookmark-make-record-function ()
   "Set `bookmark-make-record-function' to
 `org-bookmark-make-record' in current buffer.  Should be added to
 `org-mode-hook'."
   (setq-local bookmark-make-record-function 'org-bookmark-make-record))
 
+;;;###autoload
 (add-hook 'org-mode-hook 'org-set-bookmark-make-record-function)
 
 (defun org-replace-links-in-string-with-desc (string)
@@ -95,6 +103,7 @@ heading.  Set org-id for heading if necessary."
                             (handler . ,handler)
                             (front-context-string . ,front-context-string)))))
 
+;;;###autoload
 (defun org-bookmark-jump (bookmark)
   "Jump to BOOKMARK, where BOOKMARK is one whose
 `front-context-string' is an org-id."
@@ -147,7 +156,8 @@ heading.  Set org-id for heading if necessary."
 
 ;;;; Helm support
 
-(when (require 'helm nil t)
+;;;###autoload
+(with-eval-after-load 'helm-bookmark
 
   (defun helm-org-bookmark-jump-indirect-action (bookmark)
     "Call `bookmark-jump' with `org-bookmark-jump-indirect' set to t.
