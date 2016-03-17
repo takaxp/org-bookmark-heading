@@ -74,7 +74,7 @@
 (defun org-bookmark-make-record ()
   "Return alist for `bookmark-set' for current `org-mode'
 heading.  Set org-id for heading if necessary."
-  (let* ((filename (buffer-file-name))
+  (let* ((filename (buffer-file-name (org-base-buffer (current-buffer))))
          (org-filename (file-name-nondirectory filename))
          (heading (org-replace-links-in-string-with-desc (nth 4 (org-heading-components))))
          (name (concat org-filename ":" heading) )
