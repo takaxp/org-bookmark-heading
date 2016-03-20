@@ -164,7 +164,7 @@ better way to do this, but Helm can be confusing, and this works."
       (bookmark-jump bookmark)))
 
   (defun helm-org-bookmark-jump-indirect ()
-    "Jump to `org-mode' BOOKMARK in an indirect buffer."
+    "Jump to `org-mode' bookmark in an indirect buffer."
     (interactive)
     (with-helm-alive-p
       (let ((bookmark (helm-get-selection)))
