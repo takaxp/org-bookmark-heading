@@ -53,6 +53,7 @@
 
 ;;; Code:
 
+(require 'mode-local)
 (require 'org)
 
 ;;;###autoload
@@ -65,7 +66,7 @@
   "Set `bookmark-make-record-function' to
 `org-bookmark-make-record' in current buffer.  Should be added to
 `org-mode-hook'."
-  (setq-local bookmark-make-record-function 'org-bookmark-make-record))
+  (setq-mode-local org-mode bookmark-make-record-function 'org-bookmark-make-record))
 
 ;;;###autoload
 (add-hook 'org-mode-hook 'org-set-bookmark-make-record-function)
