@@ -2,7 +2,6 @@
 
 ;; Author: Adam Porter <adam@alphapapa.net>
 ;; Url: http://github.com/alphapapa/org-bookmark-heading
-;; Package-Version: 1.0.0
 
 ;;; Commentary:
 
