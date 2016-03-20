@@ -2,6 +2,7 @@
 
 ;; Author: Adam Porter <adam@alphapapa.net>
 ;; Url: http://github.com/alphapapa/org-bookmark-heading
+;; Package-Requires: ((emacs "24.4"))
 
 ;;; Commentary:
 
@@ -10,19 +11,19 @@
 ;; Emacs bookmark commands.
 
 ;; It seems like this file should be named org-bookmark.el, but a
-;; package by that name already exists which lets org-mode links point
-;; to Emacs bookmarks, sort-of the reverse of this package.
+;; package by that name already exists in org-mode/contrib which lets
+;; org-mode links point to Emacs bookmarks, sort-of the reverse of
+;; this package.
 
 ;; It also seems like this should be built-in to org-mode...  ;)
 
 ;;; Installation
 
-;; If you install from MELPA, you don't need to do anything else, but
-;; you can customize `org-bookmark-jump-indirect' if you want.
-
-;; If you install manually, add this to your init file:
+;; Require the package in your init file:
 
 ;; (require 'org-bookmark-heading)
+
+;; Then you can customize `org-bookmark-jump-indirect' if you like.
 
 ;;; Usage
 
@@ -34,6 +35,10 @@
 
 ;; You can also customize the variable `org-bookmark-jump-indirect' to
 ;; make org-mode bookmarks always open in indirect buffers.
+
+;;; Credits:
+
+;;  Thanks to Steve Purcell for his advice on several improvements.
 
 ;;; License:
 
@@ -55,20 +60,11 @@
 (require 'mode-local)
 (require 'org)
 
-;;;###autoload
 (defcustom org-bookmark-jump-indirect nil
   "Jump to `org-mode' bookmarks in indirect buffers with `org-tree-to-indirect-buffer'."
   :group 'org :type 'boolean)
 
-;;;###autoload
-(defun org-set-bookmark-make-record-function ()
-  "Set `bookmark-make-record-function' to
-`org-bookmark-make-record' in current buffer.  Should be added to
-`org-mode-hook'."
-  (setq-mode-local org-mode bookmark-make-record-function 'org-bookmark-make-record))
-
-;;;###autoload
-(add-hook 'org-mode-hook 'org-set-bookmark-make-record-function)
+(setq-mode-local org-mode bookmark-make-record-function 'org-bookmark-make-record)
 
 (defun org-replace-links-in-string-with-desc (string)
   "Replace `org-mode' links in STRING with their descriptions."
@@ -103,7 +99,6 @@ heading.  Set org-id for heading if necessary."
                             (handler . ,handler)
                             (front-context-string . ,front-context-string)))))
 
-;;;###autoload
 (defun org-bookmark-jump (bookmark)
   "Jump to BOOKMARK, where BOOKMARK is one whose
 `front-context-string' is an org-id."
@@ -156,7 +151,6 @@ heading.  Set org-id for heading if necessary."
 
 ;;;; Helm support
 
-;;;###autoload
 (with-eval-after-load 'helm-bookmark
 
   (defun helm-org-bookmark-jump-indirect-action (bookmark)
