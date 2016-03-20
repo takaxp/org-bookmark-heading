@@ -87,8 +87,8 @@ heading.  Set org-id for heading if necessary."
          (heading (org-replace-links-in-string-with-desc (nth 4 (org-heading-components))))
          (name (concat org-filename ":" heading) )
          front-context-string handler)
-    (when (not (and (boundp 'bookmark-name)
-                    (string= bookmark-name (plist-get org-bookmark-names-plist :last-capture))))
+    (unless (and (boundp 'bookmark-name)
+                 (string= bookmark-name (plist-get org-bookmark-names-plist :last-capture)))
       ;; When `org-capture-mode' is active, do not create an org-id
       ;; for the current heading.  This is because org-capture sets a
       ;; bookmark for the last capture when `org-capture-bookmark' is
@@ -131,14 +131,14 @@ heading.  Set org-id for heading if necessary."
 
           (when org-bookmark-jump-indirect
             (org-tree-to-indirect-buffer)
-            (when (not (equal original-buffer (car (window-prev-buffers))))
+            (unless (equal original-buffer (car (window-prev-buffers)))
               ;; The selected bookmark was in a different buffer.  Put the
               ;; non-indirect buffer at the bottom of the prev-buffers list
               ;; so it won't be selected when the indirect buffer is killed.
               (set-window-prev-buffers nil (append (cdr (window-prev-buffers))
                                                    (car (window-prev-buffers))))))
 
-          (when (not (equal (buffer-file-name (marker-buffer marker)) filename))
+          (unless (equal (buffer-file-name (marker-buffer marker)) filename)
             ;; TODO: Automatically update the bookmark?
 
             ;; Warn that the node has moved to another file
@@ -179,7 +179,7 @@ better way to do this, but Helm can be confusing, and this works."
             (helm-exit-and-execute-action 'helm-org-bookmark-jump-indirect-action)
           (error "Not an org-mode bookmark")))))
 
-  (when (not (lookup-key helm-bookmark-map (kbd "<C-return>")))
+  (unless (lookup-key helm-bookmark-map (kbd "<C-return>"))
     (define-key helm-bookmark-map (kbd "<C-return>") 'helm-org-bookmark-jump-indirect))
   (add-to-list 'helm-type-bookmark-actions
                '("Jump to org-mode bookmark in indirect buffer" . helm-org-bookmark-jump-indirect-action)
