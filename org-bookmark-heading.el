@@ -1,6 +1,7 @@
 ;;; org-bookmark-heading.el --- Emacs bookmark support for org-mode
 
 ;; Author: Adam Porter <adam@alphapapa.net>
+;; Version: 1.0.0
 ;; Url: http://github.com/alphapapa/org-bookmark-heading
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: hypermedia, outlines
