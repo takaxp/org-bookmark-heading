@@ -1,5 +1,7 @@
 * org-bookmark-heading.el
 
+[[http://melpa.org/#/org-bookmark-heading][file:http://melpa.org/packages/org-bookmark-heading-badge.svg]] [[http://stable.melpa.org/#/org-bookmark-heading][file:http://stable.melpa.org/packages/org-bookmark-heading-badge.svg]]
+
 ** About
 
 This package provides Emacs bookmark support for org-mode.  You can bookmark headings in org-mode files and jump to them using standard Emacs bookmark commands.
