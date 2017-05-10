@@ -37,6 +37,7 @@ You can also customize the variable =org-bookmark-jump-indirect= to make org-mod
 ** Credits
 
 + Thanks to [[https://github.com/purcell][Steve Purcell]] for his advice on several improvements.
++ Thanks to [[https://github.com/mm--][Joshua Moller-Mara]] for his patch improving robustness.
 
 ** License
 
