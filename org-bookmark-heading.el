@@ -144,48 +144,46 @@ Returns in format \"parent-directory/filename\"."
         (id (cdr (assoc 'front-context-string bookmark)))
         (original-buffer (current-buffer))
         marker new-buffer)
-    (or
-     ;; Look in open and agenda files first. This way, if the node has
-     ;; moved to another file, this might find it.
-     (setq marker (org-id-find id t))
-
-     (when (and filename
-                (not (org-find-base-buffer-visiting filename))
-                (file-exists-p filename))
-       ;; Bookmark's file exists but is not open, nor in the
-       ;; agenda. Find the file and look for the ID again.
-       (setq new-buffer (find-file-noselect filename))
-       (setq marker (org-id-find id t))))
-
-    (if marker
-        (progn
-          ;; Bookmark found
-          (org-goto-marker-or-bmk marker)
-
-          (when org-bookmark-jump-indirect
-            (org-tree-to-indirect-buffer)
-            (unless (equal original-buffer (car (window-prev-buffers)))
-              ;; The selected bookmark was in a different buffer.  Put the
-              ;; non-indirect buffer at the bottom of the prev-buffers list
-              ;; so it won't be selected when the indirect buffer is killed.
-              (set-window-prev-buffers nil (append (cdr (window-prev-buffers))
-                                                   (car (window-prev-buffers))))))
-
-          (unless (equal (buffer-file-name (marker-buffer marker)) filename)
-            ;; TODO: Automatically update the bookmark?
-
-            ;; Warn that the node has moved to another file
-            (message "Heading has moved to another file; consider updating the bookmark.")))
-      (progn
-        ;; Bookmark not found
-        (if new-buffer
-            (progn
-              ;; File found but not bookmark
-              (kill-buffer new-buffer)  ; Don't leave buffer open
-              (message "Bookmark for org-id %s not found in open org files, agenda files, or in %s." id filename))
-
-          ;; File not found
-          (message "Bookmark for org-id %s not found in open org files or agenda files, and file not found: %s" id filename))))))
+    (when id
+      ;; ID specified: find it and set marker
+      (or
+       ;; Look in open and agenda files first. This way, if the node has
+       ;; moved to another file, this might find it.
+       (setq marker (org-id-find id t))
+       (when (and filename
+                  (not (org-find-base-buffer-visiting filename))
+                  (file-exists-p filename))
+         ;; Bookmark's file exists but is not open, nor in the
+         ;; agenda. Find the file and look for the ID again.
+         (setq new-buffer (find-file-noselect filename))
+         (setq marker (org-id-find id t)))))
+    (cond (marker
+           ;; ID specified, found, and marker set
+           (org-goto-marker-or-bmk marker)
+           (when org-bookmark-jump-indirect
+             (org-tree-to-indirect-buffer)
+             (unless (equal original-buffer (car (window-prev-buffers)))
+               ;; The selected bookmark was in a different buffer.  Put the
+               ;; non-indirect buffer at the bottom of the prev-buffers list
+               ;; so it won't be selected when the indirect buffer is killed.
+               (set-window-prev-buffers nil (append (cdr (window-prev-buffers))
+                                                    (car (window-prev-buffers))))))
+           (unless (equal (buffer-file-name (marker-buffer marker)) filename)
+             ;; TODO: Automatically update the bookmark?
+             ;; Warn that the node has moved to another file
+             (message "Heading has moved to another file; consider updating the bookmark.")))
+          (id
+           ;; ID specified, but not found
+           (if new-buffer
+               (progn
+                 ;; File found but not bookmark
+                 (kill-buffer new-buffer) ; Don't leave buffer open
+                 (message "Bookmark for org-id %s not found in open org files, agenda files, or in %s." id filename))
+             ;; File not found
+             (message "Bookmark for org-id %s not found in open org files or agenda files, and file not found: %s" id filename)))
+          (t
+           ;; ID not specified, only filename
+           (find-file filename)))))
 
 ;;;; Helm support
 
