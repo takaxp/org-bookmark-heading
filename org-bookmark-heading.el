@@ -77,9 +77,13 @@
   "Jump to `org-mode' bookmarks in indirect buffers with `org-tree-to-indirect-buffer'."
   :type 'boolean)
 
+;;;; Variables
+
 (setq-mode-local org-mode bookmark-make-record-function 'org-bookmark-make-record)
 
+;;;; Functions
 
+;;;###autoload
 (defun org-bookmark-make-record ()
   "Return alist for `bookmark-set' for current `org-mode'
 heading.  Set org-id for heading if necessary."
@@ -119,6 +123,7 @@ heading.  Set org-id for heading if necessary."
 			      (handler . ,handler)
 			      (front-context-string . ,front-context-string))))))
 
+;;;###autoload
 (defun org-bookmark-jump (bookmark)
   "Jump to BOOKMARK, where BOOKMARK is one whose
 `front-context-string' is an org-id."
@@ -198,6 +203,8 @@ better way to do this, but Helm can be confusing, and this works."
   (add-to-list 'helm-type-bookmark-actions
                '("Jump to org-mode bookmark in indirect buffer" . helm-org-bookmark-jump-indirect-action)
                t))
+
+;;;; Footer
 
 (provide 'org-bookmark-heading)
 
