@@ -40,9 +40,11 @@ You can also customize the variable =org-bookmark-jump-indirect= to make org-mod
 
 *Additions*
 +  Proper customization group, ~org-bookmark-heading~.
++  Customizeable filename function, ~org-bookmark-heading-filename-fn~.
 
 *Changes*
 +  Use ~org-link-display-format~ instead of custom function.
++  By default, add parent directory to displayed filename.
 
 *** 1.0.0
 
