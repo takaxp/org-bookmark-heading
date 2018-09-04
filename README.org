@@ -38,6 +38,9 @@ You can also customize the variable =org-bookmark-jump-indirect= to make org-mod
 
 *** 1.1-pre
 
+*Additions*
++  Proper customization group, ~org-bookmark-heading~.
+
 *Changes*
 +  Use ~org-link-display-format~ instead of custom function.
 

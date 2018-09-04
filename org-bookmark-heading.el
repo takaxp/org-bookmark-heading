@@ -66,9 +66,16 @@
 (require 'org)
 (require 'bookmark)
 
+;;;; Customization
+
+(defgroup org-bookmark-heading nil
+  "Bookmark headings in Org files."
+  :group 'org
+  :link '(url-link "http://github.com/alphapapa/org-bookmark-heading"))
+
 (defcustom org-bookmark-jump-indirect nil
   "Jump to `org-mode' bookmarks in indirect buffers with `org-tree-to-indirect-buffer'."
-  :group 'org :type 'boolean)
+  :type 'boolean)
 
 (setq-mode-local org-mode bookmark-make-record-function 'org-bookmark-make-record)
 
