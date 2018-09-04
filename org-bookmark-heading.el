@@ -59,6 +59,9 @@
 
 ;;; Code:
 
+;; FIXME: Symbol prefixes should all be `org-bookmark-heading'.  Should define aliases to existing
+;; `org-bookmark'-prefixed symbols to preserve existing bookmarks and customization.
+
 (require 'mode-local)
 (require 'org)
 (require 'bookmark)
