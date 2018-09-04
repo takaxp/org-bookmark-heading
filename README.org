@@ -34,6 +34,12 @@ If you use Helm, you can jump to org-mode bookmarks in an indirect buffer by pre
 
 You can also customize the variable =org-bookmark-jump-indirect= to make org-mode bookmarks always open in indirect buffers.
 
+** Changelog
+
+*** 1.0.0
+
+Initial stable release.
+
 ** Credits
 
 + Thanks to [[https://github.com/purcell][Steve Purcell]] for his advice on several improvements.
