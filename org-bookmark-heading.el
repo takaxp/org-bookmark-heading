@@ -1,7 +1,7 @@
 ;;; org-bookmark-heading.el --- Emacs bookmark support for org-mode
 
 ;; Author: Adam Porter <adam@alphapapa.net>
-;; Version: 1.0.0
+;; Version: 1.1-pre
 ;; Url: http://github.com/alphapapa/org-bookmark-heading
 ;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: hypermedia, outlines
@@ -69,14 +69,6 @@
 
 (setq-mode-local org-mode bookmark-make-record-function 'org-bookmark-make-record)
 
-(defun org-replace-links-in-string-with-desc (string)
-  "Replace `org-mode' links in STRING with their descriptions."
-  (if (string-match org-bracket-link-regexp string)
-      (replace-regexp-in-string org-bracket-link-regexp
-                                (lambda (text) (match-string-no-properties 3 text))
-                                string)
-    ;; No links found; return original string
-    string))
 
 (defun org-bookmark-make-record ()
   "Return alist for `bookmark-set' for current `org-mode'
@@ -85,7 +77,8 @@ heading.  Set org-id for heading if necessary."
       (bookmark-make-record-default)
     (let* ((filename (buffer-file-name (org-base-buffer (current-buffer))))
 	   (org-filename (file-name-nondirectory filename))
-	   (heading (org-replace-links-in-string-with-desc (nth 4 (org-heading-components))))
+	   (heading (unless (org-before-first-heading-p)
+                      (org-link-display-format (org-get-heading t t))))
 	   (name (concat org-filename ":" heading) )
 	   front-context-string handler)
       (unless (and (boundp 'bookmark-name)
