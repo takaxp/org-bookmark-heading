@@ -95,7 +95,7 @@ It should take one argument, the path to the file."
   "Return alist for `bookmark-set' for current `org-mode'
 heading.  Set org-id for heading if necessary."
   (if (org-before-first-heading-p)
-      (bookmark-make-record-defaul)
+      (bookmark-make-record-default)
     (let* ((filename (buffer-file-name (org-base-buffer (current-buffer))))
 	   (display-filename (funcall org-bookmark-heading-filename-fn filename))
 	   (heading (unless (org-before-first-heading-p)
